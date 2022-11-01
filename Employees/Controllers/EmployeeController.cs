@@ -37,13 +37,13 @@ namespace Employees.Controllers
             return Ok(await _employeeservice.Add(newemployee));
         }
         [HttpPut]
-        public async Task<ActionResult<ServiceResponse<GetEmployeeDto>>> Update(UpdateEmployeeDto employee)
+        public async Task<ActionResult<ServiceResponse<GetEmployeeDto>>> Update(int ID,UpdateEmployeeDto updatedEmployee)
         {
-            var response = await (_employeeservice.Update(employee));
+            var response = await (_employeeservice.Update(ID,updatedEmployee));
             if(response == null)
-            {;
+            {
                 return NotFound(response);
-            }
+            } 
             return Ok(response);
         }
         [HttpDelete("{id}")]

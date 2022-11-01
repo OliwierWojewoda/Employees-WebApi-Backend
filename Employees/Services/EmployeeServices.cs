@@ -19,17 +19,7 @@ namespace Employees.Services
         {
             _context = context;
             _mapper = mapper;
-        } 
-        public async Task<ServiceResponse<List<GetEmployeeDto>>> Add(AddEmployeeDto newemployee)
-        {
-            var serviceResponse = new ServiceResponse<List<GetEmployeeDto>>();
-            await _context.Employees.ToListAsync();
-            Employee employee = _mapper.Map<Employee>(newemployee);
-            _context.Employees.Add(employee);
-            await _context.SaveChangesAsync();
-            serviceResponse.Data = _context.Employees.Select(c => _mapper.Map<GetEmployeeDto>(c)).ToList();
-            return serviceResponse;
-        }
+        }       
 
         public async Task<ServiceResponse<GetEmployeeDto>> Get(int id)
         {
@@ -43,20 +33,29 @@ namespace Employees.Services
         {
             return new ServiceResponse<List<GetEmployeeDto>> 
             { 
-                Data = _context.Employees.Select(c => _mapper.Map<GetEmployeeDto>(c)).ToList()
+                Data = await _context.Employees.Select(c => _mapper.Map<GetEmployeeDto>(c)).ToListAsync()
             };
         }
-        public async Task<ServiceResponse<GetEmployeeDto>> Update(UpdateEmployeeDto updatedEmployee)
+        public async Task<ServiceResponse<List<GetEmployeeDto>>> Add(AddEmployeeDto newemployee)
         {
-            ServiceResponse<GetEmployeeDto> response = new ServiceResponse<GetEmployeeDto>();
+            var serviceResponse = new ServiceResponse<List<GetEmployeeDto>>();
+            Employee employee = _mapper.Map<Employee>(newemployee);
+            await _context.Employees.AddAsync(employee);
+            await _context.SaveChangesAsync();
+            serviceResponse.Data = _context.Employees.Select(c => _mapper.Map<GetEmployeeDto>(c)).ToList();
+            return serviceResponse;
+        }
+        public async Task<ServiceResponse<GetEmployeeDto>> Update(int ID, UpdateEmployeeDto updatedEmployee)
+        {
+            var response = new ServiceResponse<GetEmployeeDto>();           
             try
             {
-                var employee = _context.Employees.FirstOrDefault(c => c.ID == updatedEmployee.ID);
-                // employee.Name = updatedEmployee.Name
+                var employee = _context.Employees.Find(ID);
                 _mapper.Map(updatedEmployee, employee);
                 response.Data = _mapper.Map<GetEmployeeDto>(employee);
-                await _context.SaveChangesAsync();  
+                await _context.SaveChangesAsync();
             }
+
             catch(Exception ex)
             {
                 response.Success = false;
@@ -70,7 +69,7 @@ namespace Employees.Services
             try
             {
                 Employee employee = _context.Employees.First(c => c.ID == id);
-                _context.Employees.Remove(employee);
+                 _context.Employees.Remove(employee);
                 await _context.SaveChangesAsync();
                 response.Data = _context.Employees.Select(c => _mapper.Map<GetEmployeeDto>(c)).ToList();
             }
