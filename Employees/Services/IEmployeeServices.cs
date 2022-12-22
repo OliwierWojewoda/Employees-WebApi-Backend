@@ -10,7 +10,7 @@ namespace Employees.Services
         Task<ServiceResponse<GetEmployeeDto>> Get(int id);
         Task<ServiceResponse<List<GetEmployeeDto>>> GetAll();
         Task<ServiceResponse<List<GetEmployeeDto>>> Add(AddEmployeeDto newemployee);
-        Task<ServiceResponse<GetEmployeeDto>> Update(int ID,UpdateEmployeeDto updatedEmployee);
+        Task<ServiceResponse<List<GetEmployeeDto>>> Update(int ID, UpdateEmployeeDto updatedEmployee);
         Task<ServiceResponse<List<GetEmployeeDto>>> Delete (int id);
     }
 }
