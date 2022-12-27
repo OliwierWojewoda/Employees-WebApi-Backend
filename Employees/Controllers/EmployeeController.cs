@@ -55,5 +55,20 @@ namespace Employees.Controllers
             var response = await _employeeservice.Delete(id);
             return Ok(response.Data);
         }
+        [HttpGet("GetBirthdays")]
+        public async Task<ActionResult<ServiceResponse<List<GetEmployeeDto>>>> GetBirthdays()
+        {
+            return Ok(await _employeeservice.GetBirthdays());
+        }
+        [HttpGet("SurnameSorted")]
+        public async Task<ActionResult<ServiceResponse<List<GetEmployeeDto>>>> GetAllSortBySurname()
+        {
+            return Ok(await _employeeservice.GetAllSortBySurname());
+        }
+        [HttpGet("BirthDaySorted")]
+        public async Task<ActionResult<ServiceResponse<List<GetEmployeeDto>>>> GetAllSortByBirthDate()
+        {
+            return Ok(await _employeeservice.GetAllSortByBirthDate());
+        }
     }
 }
